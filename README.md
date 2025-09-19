@@ -1,2 +1,2 @@
-# Github_Bot
-Github Bot using OpenAI API
+# Discord_Bot
+Discord Bot using OpenAI API
