@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 import logging
+from pathlib import Path
 
 
 load_dotenv()
@@ -14,18 +15,6 @@ openai_key = os.getenv('OPENAI_API_KEY')
 discord_token = os.getenv('DISCORD_TOKEN')
 client = OpenAI(api_key=openai_key)
 
-'''
-question = input("Ask me something: ")
-
-response = client.responses.create(
-    model="gpt-5",
-    instructions="Give short answers",
-    input=question
-)
-
-print(response.output_text)
-
-'''
 
 def talk_openai(question, instruction = "Give a short reply"):
     response = client.responses.create(
@@ -45,8 +34,81 @@ def code_openai(question, instruction):
 
     return response.output_text
 
+def vibe_openai(question, instruction, file, mode):
+    if mode == 0:
+        text = ""
+        with open(file, "r") as file:
+            text = file.read()
+        response = client.responses.create(
+            model="gpt-5",
+            instructions=f"{question}. {instruction}",
+            input = text
+        )
 
-handler = logging.FileHandler(filename='Github_Bot/discord.log', encoding='utf-8', mode='w')
+        return response.output_text
+    elif mode == 1:
+        text = ""
+        with open(file, "r") as file:
+            text = file.read()
+        response = client.responses.create(
+            model="gpt-5",
+            instructions=f"Improved code {question}. {instruction}. The old code is the input",
+            input = text
+        )
+
+        return response.output_text
+
+#def solve_openai(question, instruction, file):
+
+#def summarize_openai(question, instruction, file):
+
+#def quiz_openai(question, instruction, file):
+
+async def get_file(msg):
+    files = []
+    for attachment in msg.attachments:
+        SAVE_DIR = Path("Discord_Bot/reply_files")
+        SAVE_DIR.mkdir(parents=True, exist_ok=True)
+
+        safe_name = Path(attachment.filename).name  # strip any path components
+        dest = SAVE_DIR / safe_name
+
+        if dest.exists():
+            stem, suffix = dest.stem, dest.suffix
+            n = 1
+            while True:
+                candidate = SAVE_DIR / f"{stem} ({n}){suffix}"
+                if not candidate.exists():
+                    dest = candidate
+                    break
+                n += 1
+
+        await attachment.save(dest)
+        files.append(dest)
+    return files
+
+def save_file(text):
+    SAVE_DIR = Path("Discord_Bot/reply_files")
+    SAVE_DIR.mkdir(parents=True, exist_ok=True)
+
+    safe_name = Path("reply.txt").name  # strip any path components
+    dest = SAVE_DIR / safe_name
+
+    if dest.exists():
+        stem, suffix = dest.stem, dest.suffix
+        n = 1
+        while True:
+            candidate = SAVE_DIR / f"{stem} ({n}){suffix}"
+            if not candidate.exists():
+                dest = candidate
+                break
+            n += 1
+    with open(dest, "w") as file:
+            file.write(text)
+    return dest
+    
+
+handler = logging.FileHandler(filename='Discord_Bot/discord.log', encoding='utf-8', mode='w')
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -111,7 +173,34 @@ async def code(ctx, *, msg):
 
 @bot.command()
 async def vibe(ctx, *, msg):
-    await ctx.send(f"{ctx.author.mention}, this command is not yet available")
+    files = await get_file(ctx.message)
+    if(len(files) != 1):
+        await ctx.send(f"{ctx.author.mention} Please provide one file")
+        return
+    user_name = ctx.author.display_name
+    message = msg
+    instruct = f"Return only the fixed code. No explanations needed"
+    reply = ""
+    async with ctx.typing():
+        try:
+            reply = vibe_openai(message, instruct, files[0], 0)
+        except Exception as e:
+            await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
+            return
+
+    dest = save_file(reply)
+
+    message = reply
+    instruct = f"Explain the improvements made in this code, keep it under 1000 characters"
+    reply = ""
+    async with ctx.typing():
+        try:
+            reply = vibe_openai(message, instruct, files[0], 1)
+        except Exception as e:
+            await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
+            return
+
+    await ctx.send(content = f"{ctx.author.mention} {reply}", file = discord.File(dest, filename=dest.name))
 
 @bot.command()
 async def solve(ctx, *, msg):
