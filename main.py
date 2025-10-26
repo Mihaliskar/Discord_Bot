@@ -1,5 +1,3 @@
-#https://discord.com/oauth2/authorize?client_id=1417235778492436550&permissions=2815162084478016&integration_type=0&scope=bot
-
 import os
 from dotenv import load_dotenv
 import asyncio
