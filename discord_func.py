@@ -147,8 +147,32 @@ class discord_func(commands.Cog):
         await ctx.send(f"{ctx.author.mention}, this command is not yet available")
 
     @commands.command()
-    async def summarize(self, ctx, *, msg):
-        await ctx.send(f"{ctx.author.mention}, this command is not yet available")
+    async def summarize(self, ctx, *, msg = " "):
+        files = await self.get_file(ctx.message)
+        mode = 0
+        if(len(files) == 0):
+            mode = 0
+        elif (len(files) == 1):
+            mode = 1
+        else:
+            await ctx.send(f"{ctx.author.mention} Please provide at most one file")
+            return
+        user_name = ctx.author.display_name
+        message = msg
+        if (mode == 1):
+            message = " "
+        instruct = f"Summarize the following text. You must keep it under 1000 characters"
+        reply = ""
+        async with ctx.typing():
+            try:
+                if (mode == 0):
+                    reply = self.openai.summarize_openai(message, instruct, "", mode)
+                elif (mode == 1):
+                    reply = self.openai.summarize_openai(message, instruct, files[0], mode)
+            except Exception as e:
+                await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
+                return
+        await ctx.send(content = f"{ctx.author.mention} {reply}")
 
     @commands.command()
     async def quiz(self, ctx, *, msg):

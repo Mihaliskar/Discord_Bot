@@ -11,7 +11,7 @@ It interacts naturally with users, helps with coding questions, fixes uploaded c
 - /code - Ask for coding help
 - /vibe - Upload a code file and receive both the improved version and an explanation
 - /solve - Solve assignments using jarvis (coming soon)
-- /summarize - Get a summary of text or lecture notes (coming soon)
+- /summarize - Get a summary of text or lecture notes
 - /quiz - Get a quiz on uploaded material (coming soon)
 
 ## Technologies
