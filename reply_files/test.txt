@@ -1,0 +1,7 @@
+AI affects the environment in two main ways: it can add pollution through the resources needed to run it, but it can also help cut emissions by making systems more efficient.
+
+On the negative side, training and using AI requires lots of electricity in data centers. If that power comes from fossil fuels, it increases greenhouse gas emissions. Data centers can also use significant water for cooling, which matters most in hot or drought-prone areas. Finally, AI depends on hardware—chips, servers, and batteries—so mining materials and replacing old equipment can increase pollution and electronic waste.
+
+On the positive side, AI can reduce environmental harm when used wisely. It can improve renewable energy forecasting, help power grids run more smoothly, and cut energy use in buildings through smart heating and cooling. In transportation and shipping, AI can optimize routes and reduce wasted fuel. It’s also useful for monitoring nature—detecting deforestation, spotting methane leaks, and tracking wildlife—so problems are found faster.
+
+Overall, AI isn’t automatically good or bad for the environment. Its impact depends on how efficient the technology is, where the electricity comes from, and whether we use AI to reduce waste and emissions rather than increase consumption.

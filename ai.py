@@ -49,8 +49,23 @@ class ai:
             return response.output_text
 
 
-    #def solve_openai(self, question, instruction, file):
+    def solve_openai(self, question, instruction, file, mode):
+        text = ""
+        if (mode == 1):
+            with open(file, "r") as file:
+                text = file.read()
+        elif (mode == 0):
+            text = file
 
+        instruction += text
+        response = self.client.responses.create(
+            model="gpt-5",
+            instructions=f"You are a bot named Jarvis on a discord server of some friends studying computer science. You are an expert on the field and you can provide a perfect answer to any question regarding our studies. Please {instruction}.",
+            input=question
+        )
+
+        return response.output_text
+    
     def summarize_openai(self, question, instruction, file, mode):
         text = ""
         if (mode == 1):

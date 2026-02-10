@@ -143,8 +143,34 @@ class discord_func(commands.Cog):
         await ctx.send(content = f"{ctx.author.mention} {reply}", file = discord.File(dest, filename=dest.name))
 
     @commands.command()
-    async def solve(self, ctx, *, msg):
-        await ctx.send(f"{ctx.author.mention}, this command is not yet available")
+    async def solve(self, ctx, *, msg = " "):
+        files = await self.get_file(ctx.message)
+        mode = 0
+        if(len(files) == 0):
+            mode = 0
+        elif (len(files) == 1):
+            mode = 1
+        else:
+            await ctx.send(f"{ctx.author.mention} Please provide at most one file")
+            return
+        user_name = ctx.author.display_name
+        message = msg
+        if (mode == 1):
+            message = " "
+        instruct = f"Solve the following."
+        replies = []
+        async with ctx.typing():
+            try:
+                if (mode == 0):
+                    replies = self.openai.solve_openai(message, instruct, "", mode)
+                elif (mode == 1):
+                    replies = self.openai.solve_openai(message, instruct, files[0], mode)
+            except Exception as e:
+                await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
+                return
+        #for r in replies:
+            #await ctx.send(content = f"{ctx.author.mention} {r}")
+        await ctx.send(content = f"{ctx.author.mention} {replies}")
 
     @commands.command()
     async def summarize(self, ctx, *, msg = " "):
