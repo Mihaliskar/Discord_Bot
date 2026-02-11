@@ -4,3 +4,5 @@ discord.log
 __pycache__/
 *.pyc
 *.pyo
+
+reply_files/

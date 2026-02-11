@@ -53,6 +53,36 @@ class discord_func(commands.Cog):
                 file.write(text)
         return dest
     
+    def split_message(self, msg):
+        max_len=975
+        if max_len <= 0:
+            return ["oops"]
+
+        chunks = ["name"]
+
+        if msg is None:
+            return chunks
+
+        if msg == "":
+            return chunks
+
+        i = 0
+        n = len(msg)
+
+        while i < n:
+            end = i + max_len
+            if end > n:
+                end = n
+
+            chunk = msg[i:end]
+            chunks.append(chunk)
+
+            i = end
+
+        return chunks
+
+        
+
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"Hello, {self.bot.user.name}")
@@ -87,20 +117,23 @@ class discord_func(commands.Cog):
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
                 return
 
-        await ctx.send(f"{ctx.author.mention} {reply}")
+        replies = self.split_message(reply)
+        replies[0] = ctx.author.mention 
+        for r in replies:
+            await ctx.send(f"{r}")
 
 
     @commands.command()
     async def jarvis(self, ctx):
         await ctx.send("/hello -> Say hello to the bot \n /ask message -> Ask a question to chat gpt \n /jarvis -> Get a list of all the commands " \
-        "\n /code -> Ask chat gpt for coding help \n /vibe -> Fix code using chat gpt by providing a file containing the code \n /solve -> Solve assignments using chat gpt " \
-        "\n /summarize -> Get a summary of lecture slides \n /quiz -> Get a quiz on slides")
+        "\n /code message -> Ask chat gpt for coding help \n /vibe message or file -> Fix code using chat gpt by providing a file containing the code \n /solve message or file -> Solve assignments using chat gpt " \
+        "\n /summarize message or file -> Get a summary of lecture slides \n /quiz message or file -> Get a quiz on slides")
 
     @commands.command()
     async def code(self, ctx, *, msg):
         user_name = ctx.author.display_name
         message = msg
-        instruct = f"give a complete and friendly reply to the user named {user_name}, But keep it correct, informative and keep it under 1000 characters"
+        instruct = f"give a complete and friendly reply to the user named {user_name}, But keep it correct and informative"
         reply = ""
         async with ctx.typing():
             try:
@@ -109,7 +142,10 @@ class discord_func(commands.Cog):
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
                 return
 
-        await ctx.send(f"{ctx.author.mention} {reply}")
+        replies = self.split_message(reply)
+        replies[0] = ctx.author.mention 
+        for r in replies:
+            await ctx.send(f"{r}")
 
     @commands.command()
     async def vibe(self, ctx, *, msg):
@@ -131,7 +167,7 @@ class discord_func(commands.Cog):
         dest = self.save_file(reply)
 
         message = reply
-        instruct = f"Explain the improvements made in this code, keep it under 1000 characters"
+        instruct = f"Explain the improvements made in this code"
         reply = ""
         async with ctx.typing():
             try:
@@ -140,7 +176,11 @@ class discord_func(commands.Cog):
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
                 return
 
-        await ctx.send(content = f"{ctx.author.mention} {reply}", file = discord.File(dest, filename=dest.name))
+        await ctx.send(content = f"{ctx.author.mention}", file = discord.File(dest, filename=dest.name))
+        replies = self.split_message(reply)
+        replies[0] = ctx.author.mention 
+        for r in replies:
+            await ctx.send(f"{r}")
 
     @commands.command()
     async def solve(self, ctx, *, msg = " "):
@@ -158,19 +198,20 @@ class discord_func(commands.Cog):
         if (mode == 1):
             message = " "
         instruct = f"Solve the following."
-        replies = []
+        reply = ""
         async with ctx.typing():
             try:
                 if (mode == 0):
-                    replies = self.openai.solve_openai(message, instruct, "", mode)
+                    reply = self.openai.solve_openai(message, instruct, "", mode)
                 elif (mode == 1):
-                    replies = self.openai.solve_openai(message, instruct, files[0], mode)
+                    reply = self.openai.solve_openai(message, instruct, files[0], mode)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
                 return
-        #for r in replies:
-            #await ctx.send(content = f"{ctx.author.mention} {r}")
-        await ctx.send(content = f"{ctx.author.mention} {replies}")
+        replies = self.split_message(reply)
+        replies[0] = ctx.author.mention 
+        for r in replies:
+            await ctx.send(f"{r}")
 
     @commands.command()
     async def summarize(self, ctx, *, msg = " "):
@@ -187,7 +228,7 @@ class discord_func(commands.Cog):
         message = msg
         if (mode == 1):
             message = " "
-        instruct = f"Summarize the following text. You must keep it under 1000 characters"
+        instruct = f"Summarize the following text."
         reply = ""
         async with ctx.typing():
             try:
@@ -198,7 +239,10 @@ class discord_func(commands.Cog):
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
                 return
-        await ctx.send(content = f"{ctx.author.mention} {reply}")
+        replies = self.split_message(reply)
+        replies[0] = ctx.author.mention 
+        for r in replies:
+            await ctx.send(f"{r}")
 
     @commands.command()
     async def quiz(self, ctx, *, msg):
