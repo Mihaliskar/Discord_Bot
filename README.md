@@ -6,7 +6,7 @@ It interacts naturally with users, helps with coding questions, fixes uploaded c
 ## Features
 
 - /hello - Say hello to jarvis
-- /ask message - Ask a question to jarvis
+- /ask - Ask a question to jarvis
 - /jarvis - Get a list of all the available commands
 - /code - Ask for coding help
 - /vibe - Upload a code file and receive both the improved version and an explanation
