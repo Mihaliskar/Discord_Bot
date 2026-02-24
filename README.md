@@ -12,7 +12,8 @@ It interacts naturally with users, helps with coding questions, fixes uploaded c
 - /vibe - Upload a code file and receive both the improved version and an explanation
 - /solve - Solve assignments using jarvis
 - /summarize - Get a summary of text or lecture notes
-- /quiz - Get a quiz on uploaded material (coming soon)
+- /quiz - Get a quiz on uploaded material
+- /usage - Get the total token usage of each user
 
 ## Technologies
 
@@ -20,15 +21,53 @@ It interacts naturally with users, helps with coding questions, fixes uploaded c
 - Discord.py – Discord bot framework for commands and events
 - OpenAI API (GPT-5) – AI-powered text generation and code improvement
 - GitHub - Version control & CI/CD
+- Docker - Deployment
+
+---
 
 ## Installation
 
+### Prerequisites
+
+- A Discord bot token
+- An OpenAI API key
+
+## Option 1: Docker (recomended)
+Clone the repo
+
+Create a .env file
+
+```
+DISCORD_TOKEN=your_discord_bot_token
+OPENAI_API_KEY=your_openai_api_key
+```
+
+Build and run the Docker Container
+
+```
+sudo docker-compose up -d --build
+```
+
+Check that the Container is running
+
+```
+sudo docker ps
+```
+
+Invite your discord bot to a server
+
+## Option 2: Virtual Environment
+
+Create a python virtual environment and activate it
+
 Clone the repo and run 
+
 ```
 pip install -r requirements.txt
 ```
 
 Create a .env file
+
 ```
 DISCORD_TOKEN=your_discord_bot_token
 OPENAI_API_KEY=your_openai_api_key
