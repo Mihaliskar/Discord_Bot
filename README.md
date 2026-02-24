@@ -32,7 +32,7 @@ It interacts naturally with users, helps with coding questions, fixes uploaded c
 - A Discord bot token
 - An OpenAI API key
 
-## Option 1: Docker (recomended)
+### Option 1: Docker (recomended)
 Clone the repo
 
 Create a .env file
@@ -56,7 +56,7 @@ sudo docker ps
 
 Invite your discord bot to a server
 
-## Option 2: Virtual Environment
+### Option 2: Virtual Environment
 
 Create a python virtual environment and activate it
 
@@ -73,7 +73,7 @@ DISCORD_TOKEN=your_discord_bot_token
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-Add your discord bot to a server and run the application
+Invite your discord bot to a server and run the application
 
 ```
 python main.py
