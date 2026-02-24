@@ -1,0 +1,10 @@
+services:
+  jarvis-bot:
+    build: .
+    container_name: jarvis-bot
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: "${DISCORD_TOKEN}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+    volumes:
+      - ./Discord_Bot:/app/Discord_Bot
