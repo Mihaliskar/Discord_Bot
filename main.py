@@ -23,7 +23,7 @@ logger.addHandler(handler)
 
 async def main():
     async with bot:
-        await bot.add_cog(discord_func(bot, openai_key))  # <-- await this
+        await bot.add_cog(discord_func(bot, openai_key))
         await bot.start(discord_token)
 
 
