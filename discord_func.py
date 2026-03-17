@@ -3,6 +3,7 @@ from discord.ext import commands
 import logging
 from pathlib import Path
 import sqlite3
+import asyncio
 
 from ai import *
 
@@ -137,7 +138,7 @@ class discord_func(commands.Cog):
         reply = ""
         async with ctx.typing():
             try:
-                reply, usage = self.openai.talk_openai(message, instruct)
+                reply, usage = await asyncio.to_thread(self.openai.talk_openai, message, instruct)
                 self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -163,7 +164,7 @@ class discord_func(commands.Cog):
         reply = ""
         async with ctx.typing():
             try:
-                reply, usage = self.openai.code_openai(message, instruct)
+                reply, usage = await asyncio.to_thread(self.openai.code_openai, message, instruct)
                 self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -186,7 +187,7 @@ class discord_func(commands.Cog):
         reply = ""
         async with ctx.typing():
             try:
-                reply, usage = self.openai.vibe_openai(message, instruct, files[0], 0)
+                reply, usage = await asyncio.to_thread(self.openai.vibe_openai, message, instruct, files[0], 0)
                 self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -199,7 +200,7 @@ class discord_func(commands.Cog):
         reply = ""
         async with ctx.typing():
             try:
-                reply, usage = self.openai.vibe_openai(message, instruct, files[0], 1)
+                reply, usage = await asyncio.to_thread(self.openai.vibe_openai, message, instruct, files[0], 1)
                 self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -231,10 +232,10 @@ class discord_func(commands.Cog):
         async with ctx.typing():
             try:
                 if (mode == 0):
-                    reply, usage = self.openai.solve_openai(message, instruct, "", mode)
+                    reply, usage = await asyncio.to_thread(self.openai.solve_openai, message, instruct, "", mode)
                     self.add_usage(ctx.author.name, usage)
                 elif (mode == 1):
-                    reply, usage = self.openai.solve_openai(message, instruct, files[0], mode)
+                    reply, usage = await asyncio.to_thread(self.openai.solve_openai, message, instruct, files[0], mode)
                     self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -264,10 +265,10 @@ class discord_func(commands.Cog):
         async with ctx.typing():
             try:
                 if (mode == 0):
-                    reply, usage = self.openai.summarize_openai(message, instruct, "", mode)
+                    reply, usage = await asyncio.to_thread(self.openai.summarize_openai, message, instruct, "", mode)
                     self.add_usage(ctx.author.name, usage)
                 elif (mode == 1):
-                    reply, usage = self.openai.summarize_openai(message, instruct, files[0], mode)
+                    reply, usage = await asyncio.to_thread(self.openai.summarize_openai, message, instruct, files[0], mode)
                     self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
@@ -297,10 +298,10 @@ class discord_func(commands.Cog):
         async with ctx.typing():
             try:
                 if (mode == 0):
-                    reply, usage = self.openai.quiz_openai(message, instruct, "", mode)
+                    reply, usage = await asyncio.to_thread(self.openai.quiz_openai, message, instruct, "", mode)
                     self.add_usage(ctx.author.name, usage)
                 elif (mode == 1):
-                    reply, usage = self.openai.quiz_openai(message, instruct, files[0], mode)
+                    reply, usage = await asyncio.to_thread(self.openai.quiz_openai, message, instruct, files[0], mode)
                     self.add_usage(ctx.author.name, usage)
             except Exception as e:
                 await ctx.send(f"Sorry {ctx.author.mention}, I run into an error: {e}")
