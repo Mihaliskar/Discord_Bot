@@ -134,7 +134,7 @@ class discord_func(commands.Cog):
     async def ask(self, ctx, *, msg):
         user_name = ctx.author.display_name
         message = msg
-        instruct = f"give a short and friendly reply to the user named {user_name}"
+        instruct = f"give a friendly reply to the user named {user_name}"
         reply = ""
         async with ctx.typing():
             try:
